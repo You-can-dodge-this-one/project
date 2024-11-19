@@ -1,0 +1,809 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\tools\keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\m
+                    -ain.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "ultrasonic.h"
+   2          #include "action.h"
+   3          #include "motor.h"
+   4          #include "key.h"
+   5          
+   6          bit candle_fire_4=0x01;// 1 is fire on ; 0 is extinguish
+   7          bit candle_fire_5=0x00;//  1 is fire on ; 0 is extinguish
+   8          bit candle_fire_6=0x00;////  1 is fire on ; 0 is extinguish
+   9          bit candle_fire_7=0x01;////  1 is fire on ; 0 is extinguish
+  10          bit candle_fire_8=0x01;////  1 is fire on ; 0 is extinguish
+  11          sbit Fan = P0^0;
+  12          sbit LeftFire = P0^2;
+  13          sbit RightFire = P0^3;
+  14          
+  15          #define Fan_On {Fan = 0;}
+  16          #define Fan_Off {Fan = 1;}
+  17          
+  18          unsigned int left_300;
+  19          unsigned int blow=800;//吹风时间
+  20          unsigned char d;
+  21          
+  22          void main()
+  23          {
+  24   1        LED = 1;
+  25   1        Timer0Init();//左轮PWM
+  26   1        Timer1Init();//右轮PWM
+  27   1        Ultrasonic_Init();
+  28   1        while(1)
+  29   1        { 
+  30   2          keyscan();
+  31   2      //    while(1){k();}
+  32   2          if(start==1)
+  33   2          {
+  34   3            front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+  35   3            front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+  36   3            front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+  37   3            front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+  38   3            right_dis= Ultrasonic_Get_Right();
+  39   3            left_dis= Ultrasonic_Get_Left();
+  40   3            right_dis= Ultrasonic_Get_Right();
+  41   3            left_dis= Ultrasonic_Get_Left();
+  42   3            right_dis= Ultrasonic_Get_Right();
+  43   3            left_dis= Ultrasonic_Get_Left();
+  44   3            
+  45   3          
+  46   3      //    //测试直行
+  47   3      //    
+  48   3      ////      while(1){forward();}
+  49   3      //      
+  50   3      //          //      //测试转向
+  51   3      //          d=4;
+  52   3      //          while(d)
+  53   3      //          {
+  54   3      //          car_stop();
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 2   
+
+  55   3      //          delay_ms(50);
+  56   3      //          car_stop();
+  57   3      //          turn_right_90();
+  58   3      //          car_stop();
+  59   3      //          delay_ms(1000);
+  60   3      //          d--;
+  61   3      //          }
+  62   3      //          while(1){k();}
+  63   3                //
+  64   3          
+  65   3          
+  66   3            goto aaa;
+  67   3          //////////////////
+  68   3            aaa:
+  69   3            if(candle_fire_4==0x00&&candle_fire_5==0x00&&candle_fire_6==0x00&&candle_fire_7==0x00&&candle_fire_8==0
+             -x00)
+  70   3            {
+  71   4              car_stop();
+  72   4              break;  
+  73   4            }
+  74   3          //////////////////
+  75   3            
+  76   3      //开机出发，巡右墙，在离墙180毫米处停下
+  77   3      //并在3#街道停下来，离墙180毫米停。
+  78   3      // now potion is cornre 3 of  room 2,next action  walk alone righr wall
+  79   3          ///////////////////
+  80   3            bbb:
+  81   3            do
+  82   3            {
+  83   4              Circulation_wall_right();       
+  84   4            }
+  85   3            while(front_dis >480);
+  86   3          //////////////////
+  87   3      
+  88   3      // now potion is cornre 4 of room 2,next action  turn left
+  89   3            do
+  90   3            {
+  91   4              Circulation_wall_right();
+  92   4            }
+  93   3            while(front_dis >190);
+  94   3            car_stop();
+  95   3            delay_ms(50);
+  96   3            turn_left_90();
+  97   3            
+  98   3            
+  99   3            //直接屏蔽掉右方超声波检测引起的误判
+ 100   3            car_stop();
+ 101   3      //      i=0;
+ 102   3      //      do
+ 103   3      //      {
+ 104   3      //        car_stop();
+ 105   3      //      }
+ 106   3      //      while(i<2);
+ 107   3            
+ 108   3      // 判断3号房有火吗
+ 109   3          //火全部在第4号房间       模式1   7  8火       
+ 110   3            if(candle_fire_4==0x00&&candle_fire_5==0x00&&candle_fire_6==0x00)
+ 111   3            {
+ 112   4              //火在4号房间
+ 113   4      /////////////           
+ 114   4      //这时小车4号大街尽端，准备进入4号房间，不去3号房间，
+ 115   4      ///////////////因为3号房间刚刚判断过，没有火源
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 3   
+
+ 116   4      /////////////////
+ 117   4              i = 0;
+ 118   4              do
+ 119   4              {
+ 120   5                Circulation_wall_right();
+ 121   5              }
+ 122   4              while(i<95);              
+ 123   4              car_stop();
+ 124   4              delay_ms(50); 
+ 125   4              turn_left_90();       
+ 126   4      /////////////           
+ 127   4      //这时小车2号大街终端，4号房间大门处，车头已经对准4#房间大门。准备进入4号
+             -房间
+ 128   4              fire_8_fire_7_is_fire_on:           
+ 129   4              if (candle_fire_8==0x01)
+ 130   4              {
+ 131   5                _left_dis=170;
+ 132   5                //4号房间的火源是8号，至于7号是否也着火，下面会在灭完8号火后进行判断
+ 133   5                do
+ 134   5                {
+ 135   6                  Circulation_wall_left();//   PID调整距离前进  保持中心距离 
+ 136   6                }
+ 137   5                while(front_dis >190);
+ 138   5            // now potion is cornre 4 of room 2,next action  turn left
+ 139   5                car_stop();
+ 140   5                car_stop();
+ 141   5                delay_ms(50);
+ 142   5                do
+ 143   5                {
+ 144   6                  Fan_On;
+ 145   6                  delay_ms(blow);//1100
+ 146   6                  break;
+ 147   6                }
+ 148   5                while(LeftFire==0||RightFire==0);   /////为0火是点燃状态 不跳出循环 让它不断的吹
+ 149   5                delay_ms(500);
+ 150   5                //害怕死灰复燃，停2秒，再次检测，
+ 151   5                while(LeftFire==0||RightFire==0)
+ 152   5                {
+ 153   6                  Fan_On;
+ 154   6                  delay_ms(500);//1000
+ 155   6                  break;
+ 156   6                }
+ 157   5                delay_ms(1000);
+ 158   5                
+ 159   5                //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+ 160   5                while(LeftFire==0||RightFire==0)
+ 161   5                {
+ 162   6                  Fan_On;
+ 163   6                  delay_ms(500);//1000
+ 164   6                  break;
+ 165   6                }
+ 166   5                Fan_Off;
+ 167   5                delay_ms(500);
+ 168   5                car_stop();
+ 169   5                _left_dis=180;
+ 170   5              }
+ 171   4              else         
+ 172   4              {
+ 173   5                _left_dis=170;
+ 174   5                //4号房间的火源在7号
+ 175   5                do
+ 176   5                {
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 4   
+
+ 177   6                  Circulation_wall_left();
+ 178   6                }
+ 179   5                while(front_dis >190);
+ 180   5              // now potion is cornre 4 of room 2,next action  turn left
+ 181   5                car_stop();
+ 182   5              }
+ 183   4              if(candle_fire_7==0x01)
+ 184   4              {
+ 185   5                delay_ms(50);
+ 186   5                //准备前往7号蜡烛，先把车头右转90度，巡左墙
+ 187   5                turn_right_90();
+ 188   5                do
+ 189   5                {
+ 190   6                  Circulation_wall_left();
+ 191   6                }
+ 192   5                while(front_dis >170);
+ 193   5        // now potion is cornre 4 of room 2,next action turn left
+ 194   5                car_stop();
+ 195   5        //now position is fire 1,and next step put off fire 1   
+ 196   5                car_stop();
+ 197   5                do
+ 198   5                { 
+ 199   6                  Fan_On;
+ 200   6                  delay_ms(blow);//1100
+ 201   6                  break;
+ 202   6                }
+ 203   5                while(LeftFire==0||RightFire==0);
+ 204   5                delay_ms(500);
+ 205   5                //害怕死灰复燃，停2秒，再次检测，
+ 206   5                while(LeftFire==0||RightFire==0)
+ 207   5                {
+ 208   6                  Fan_On;
+ 209   6                  delay_ms(500);//1000
+ 210   6                  break;
+ 211   6                }
+ 212   5                delay_ms(1000);
+ 213   5                //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+ 214   5                while(LeftFire==0||RightFire==0)
+ 215   5                {
+ 216   6                  Fan_On;
+ 217   6                  delay_ms(500);//1000
+ 218   6                  break;
+ 219   6                }
+ 220   5                Fan_Off;
+ 221   5                delay_ms(500);
+ 222   5            //now position is fire 1,and next turn back       
+ 223   5      //        find_fire_turn_back_right();
+ 224   5            //now position is fire 1,and next turn left       
+ 225   5                car_stop();
+ 226   5                _right_dis =170;
+ 227   5        //灭火结束，回家，原地掉头180度，巡右墙，左转90度，车头对准大门
+ 228   5                turn_right_180();  
+ 229   5                do
+ 230   5                {
+ 231   6                  Circulation_wall_right();
+ 232   6                }
+ 233   5                while(front_dis >210);
+ 234   5                car_stop();
+ 235   5                delay_ms(50);
+ 236   5                turn_left_90();
+ 237   5              }
+ 238   4              else
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 5   
+
+ 239   4              {
+ 240   5                _right_dis =170;
+ 241   5                delay_ms(150);
+ 242   5                //回家，即原地180度掉头，车头对准大门
+ 243   5                turn_right_180();
+ 244   5              }
+ 245   4              car_stop();
+ 246   4      //小车目前处于4号房间4号拐角，车头对准大门，巡右墙出4号房间大门。
+ 247   4      //准备驶出4#房间，并在3#街道停下来，离墙180毫米停。
+ 248   4      ////////////////////
+ 249   4              do
+ 250   4              {
+ 251   5                Circulation_wall_right();
+ 252   5              }
+ 253   4              while(front_dis>485);///qian 485
+ 254   4              do
+ 255   4              {
+ 256   5                Circulation_wall_right();
+ 257   5              }
+ 258   4              while(front_dis >200);
+ 259   4              car_stop();
+ 260   4              delay_ms(50);
+ 261   4              turn_right_90();
+ 262   4              car_stop();           
+ 263   4            /////////////           
+ 264   4      //这时小车4号房间大门口，准备进入4#大街
+ 265   4      ///////////////
+ 266   4              i = 0;
+ 267   4              do
+ 268   4              {
+ 269   5                Circulation_wall_left();
+ 270   5              }
+ 271   4              while(i<=120);//115
+ 272   4              car_stop();
+ 273   4              delay_ms(50);
+ 274   4              turn_right_90_small();
+ 275   4              delay_ms(30);
+ 276   4      //        delay_ms(50);
+ 277   4              car_stop();
+ 278   4      /////////////       
+ 279   4      //这时小车4#大街，车头对准出发点，准备巡左墙回家
+ 280   4      ///////////////
+ 281   4              _right_dis = 160;//改变右边pid
+ 282   4              do  
+ 283   4              {
+ 284   5                Circulation_wall_right();
+ 285   5              }
+ 286   4              while(front_dis >600);    
+ 287   4              ccc:
+ 288   4              do  
+ 289   4              {
+ 290   5                Circulation_wall_right();
+ 291   5              }
+ 292   4              while(front_dis >550);    
+ 293   4              do
+ 294   4              {
+ 295   5                Circulation_wall_right();
+ 296   5              }
+ 297   4              while(front_dis >395);            
+ 298   4              
+ 299   4              car_stop();
+ 300   4              car_stop();
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 6   
+
+ 301   4              
+ 302   4              front_dis= Ultrasonic_Get_Front();
+ 303   4              front_dis= Ultrasonic_Get_Front();
+ 304   4              front_dis= Ultrasonic_Get_Front();
+ 305   4              front_dis= Ultrasonic_Get_Front();
+ 306   4              
+ 307   4              if(Ultrasonic_Get_Front() <= 395)
+ 308   4              {
+ 309   5                car_stop();
+ 310   5                car_stop();
+ 311   5              }
+ 312   4              
+ 313   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 314   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 315   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 316   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 317   4              
+ 318   4              if(kalmanfilter(Ultrasonic_Get_Front(),1) <= 395)
+ 319   4              {
+ 320   5                car_stop();
+ 321   5                car_stop();
+ 322   5              }
+ 323   4              
+ 324   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 325   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 326   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 327   4              front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 328   4              
+ 329   4              if(kalmanfilter(Ultrasonic_Get_Front(),1) <= 395)
+ 330   4              {
+ 331   5                car_stop();
+ 332   5                car_stop();
+ 333   5              }
+ 334   4              
+ 335   4              if(kalmanfilter(Ultrasonic_Get_Front(),1) > 395)
+ 336   4              {
+ 337   5                front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 338   5                front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 339   5                goto ccc;
+ 340   5              }
+ 341   4              
+ 342   4              
+ 343   4              else if(kalmanfilter(Ultrasonic_Get_Front(),1) <= 395)
+ 344   4              {
+ 345   5                car_stop();
+ 346   5                car_stop();
+ 347   5                delay_ms(100);
+ 348   5                car_stop();
+ 349   5                car_stop();
+ 350   5                while(1);
+ 351   5              }
+ 352   4              
+ 353   4              car_stop();
+ 354   4              car_stop();
+ 355   4              delay_ms(100);
+ 356   4              car_stop();
+ 357   4              car_stop();
+ 358   4              while(1); 
+ 359   4            }
+ 360   3            goto wrong_judge_have_left_wall;          
+ 361   3      //////////////////////////
+ 362   3      //3#房间有火，至于4号房间是否有火，回来的路上到了6#蜡烛在判断，
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 7   
+
+ 363   3      //先行前往3号房间
+ 364   3      //目前小车位置是在4号大街尽头，车头朝向6号蜡烛
+ 365   3      //这时小车处于3#大街，巡右墙走，并扫描左墙，稳定发现左墙
+ 366   3      ///////////////         
+ 367   3            wrong_judge_have_left_wall:     
+ 368   3            i=0;
+ 369   3            do
+ 370   3            {
+ 371   4              Circulation_wall_right();
+ 372   4      //        right_dis= Ultrasonic_Get_Right();
+ 373   4            }
+ 374   3            while(i<=20);
+ 375   3            do
+ 376   3            {
+ 377   4              Circulation_wall_right();
+ 378   4      //        right_dis= Ultrasonic_Get_Right();
+ 379   4            }
+ 380   3            while(right_dis<=410);
+ 381   3            ////////////////
+ 382   3            car_stop();
+ 383   3            car_stop();
+ 384   3            i=0;
+ 385   3            do
+ 386   3            {
+ 387   4              Circulation_wall_left();
+ 388   4            }
+ 389   3            while(i<60);//50
+ 390   3            car_stop();
+ 391   3            delay_ms(50);
+ 392   3            car_stop();
+ 393   3            if (candle_fire_6==0x01)//6号蜡烛有火，前往灭火
+ 394   3            {
+ 395   4              do
+ 396   4              {
+ 397   5                Fan_On;
+ 398   5                delay_ms(blow);//1100
+ 399   5                break;
+ 400   5              }
+ 401   4              while(LeftFire==0||RightFire==0);
+ 402   4              delay_ms(500);
+ 403   4              //害怕死灰复燃，停2秒，再次检测，
+ 404   4              while(LeftFire==0||RightFire==0)
+ 405   4              {
+ 406   5                Fan_On;
+ 407   5                delay_ms(500);//1000
+ 408   5                break;
+ 409   5              }
+ 410   4              delay_ms(1000);
+ 411   4              //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+ 412   4              while(LeftFire==0||RightFire==0)
+ 413   4              {
+ 414   5                Fan_On;
+ 415   5                delay_ms(500);//1000
+ 416   5                break;
+ 417   5              }
+ 418   4              Fan_Off;
+ 419   4            //  delay_ms(1000);
+ 420   4              delay_ms(500);
+ 421   4              car_stop();
+ 422   4            }
+ 423   3            //6号蜡烛已经灭完火了，在判断5号，4号蜡烛是否着火
+ 424   3            if(candle_fire_5==0x01||candle_fire_4==0x01)
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 8   
+
+ 425   3              //5号，6号蜡烛是否着火
+ 426   3            {
+ 427   4              delay_ms(150);
+ 428   4              //前往4号或是5号着火点灭火，此时车况是3#大街尽头，
+ 429   4              //车头朝向6#蜡烛
+ 430   4              turn_right_90();
+ 431   4              car_stop();
+ 432   4              delay_ms(50);
+ 433   4              _left_dis=180;//改变左pid
+ 434   4              if(candle_fire_5==0x01)//前往灭5号蜡烛的火
+ 435   4              {
+ 436   5                i=0;
+ 437   5                do
+ 438   5                {
+ 439   6      //              forward();
+ 440   6                  Circulation_wall_left();
+ 441   6                }while(i<20);
+ 442   5                do
+ 443   5                {
+ 444   6                  Circulation_wall_left();
+ 445   6                }while(front_dis >190);
+ 446   5                car_stop();
+ 447   5                car_stop();
+ 448   5                delay_ms(50);
+ 449   5      //          _left_dis=180;//改变左pid
+ 450   5                do
+ 451   5                {
+ 452   6                  Fan_On;
+ 453   6                  delay_ms(blow);//1100
+ 454   6                  break;
+ 455   6                }
+ 456   5                while(LeftFire==0||RightFire==0);
+ 457   5                delay_ms(500);
+ 458   5                //害怕死灰复燃，停2秒，再次检测，
+ 459   5                while(LeftFire==0||RightFire==0)
+ 460   5                {
+ 461   6                  Fan_On;
+ 462   6                  delay_ms(500);//1000
+ 463   6                  break;
+ 464   6                }
+ 465   5                delay_ms(1000);
+ 466   5                //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+ 467   5                while(LeftFire==0||RightFire==0)
+ 468   5                {
+ 469   6                  Fan_On;
+ 470   6                  delay_ms(500);//1000
+ 471   6                  break;
+ 472   6                }
+ 473   5                Fan_Off;
+ 474   5                delay_ms(500);
+ 475   5            //now position is fire 1,and next turn back       
+ 476   5            //now position is fire 1,and next turn left       
+ 477   5                car_stop();
+ 478   5      //判断4#蜡烛是否着火，着火就去4#蜡烛处灭火，不着火，返回
+ 479   5      //目前车处于5号蜡烛处，车头正对5#蜡烛
+ 480   5                if (candle_fire_4==0x01)
+ 481   5      //右转90度，巡左墙，去3#房间的3号拐角，依次4号蜡烛，灭火返回值6号蜡烛处
+ 482   5                {
+ 483   6                  delay_ms(50);
+ 484   6                  turn_right_90();
+ 485   6      /////////////     
+ 486   6      //这时小车处于5#着火点，准备离开着火点。巡左墙走，
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 9   
+
+ 487   6      //并在前墙170毫米处停下
+ 488   6      ///////////////             
+ 489   6                  do
+ 490   6                  {
+ 491   7                    Circulation_wall_left();
+ 492   7                  }
+ 493   6                  while(front_dis >210);
+ 494   6                  car_stop();
+ 495   6                  delay_ms(50);
+ 496   6                  turn_right_90();
+ 497   6                  _left_dis=175;
+ 498   6      /////////////     
+ 499   6      //这时小车处于3#房间拐角3，准备离去4#着火点。巡左墙走，
+ 500   6      //并在前墙210毫米处停下
+ 501   6      ///////////////           
+ 502   6                  do
+ 503   6                  {
+ 504   7                    Circulation_wall_left();
+ 505   7                  }
+ 506   6                  while(front_dis >170);
+ 507   6                  car_stop();
+ 508   6                  //灭火开始            
+ 509   6      //            find_fire_turn_left();
+ 510   6          //now position is fire 1,and next step put off  fire 1    
+ 511   6                  car_stop();
+ 512   6                  do
+ 513   6                  {
+ 514   7                    Fan_On;
+ 515   7                    delay_ms(blow);//1100
+ 516   7                    break;
+ 517   7                  }
+ 518   6                  while(LeftFire==0||RightFire==0);
+ 519   6                  delay_ms(500);
+ 520   6                  //害怕死灰复燃，停2秒，再次检测，
+ 521   6                  while(LeftFire==0||RightFire==0)
+ 522   6                  {
+ 523   7                    Fan_On;
+ 524   7                    delay_ms(500);//1000
+ 525   7                    break;
+ 526   7                  }
+ 527   6                  delay_ms(1000);
+ 528   6                  //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+ 529   6                  while(LeftFire==0||RightFire==0)
+ 530   6                  {
+ 531   7                    Fan_On;
+ 532   7                    delay_ms(500);//1000
+ 533   7                    break;
+ 534   7                  }
+ 535   6                  Fan_Off;
+ 536   6                  delay_ms(500);
+ 537   6              
+ 538   6                  car_stop();/////////原始程序回家方式、
+ 539   6                  turn_right_90();
+ 540   6                  
+ 541   6                  goto fire4_go_to_fire6_NO2;                   
+ 542   6                        
+ 543   6                }
+ 544   5                else//180度掉头，巡右墙，回到6号蜡烛处
+ 545   5                {
+ 546   6                  
+ 547   6                  delay_ms(50);
+ 548   6                  turn_right_180();
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 10  
+
+ 549   6                  do
+ 550   6                  {
+ 551   7                    Circulation_wall_right();
+ 552   7                  }
+ 553   6                  while(front_dis >190);
+ 554   6                  car_stop();
+ 555   6                  turn_left_90();
+ 556   6                  goto street_3_end_car_forward_up;
+ 557   6                  //////////6号处，车头背对火焰
+ 558   6                }
+ 559   5              }
+ 560   4              else///////////////这表明 4号有火，五号没火/////////////////
+ 561   4              {
+ 562   5                front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 563   5                front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 564   5                front_dis= kalmanfilter(Ultrasonic_Get_Front(),1);
+ 565   5                i=0;
+ 566   5                do
+ 567   5                {
+ 568   6                  Circulation_wall_left();
+ 569   6                }while(i<20);
+ 570   5                do
+ 571   5                {
+ 572   6                  Circulation_wall_left();
+ 573   6                }
+ 574   5                while(front_dis >=190);
+ 575   5                car_stop();
+ 576   5                _left_dis=175;//此时在5号火处，准备到四号火
+ 577   5                delay_ms(20);
+ 578   5                turn_right_90();
+ 579   5                do
+ 580   5                {
+ 581   6                  Circulation_wall_left();
+ 582   6                }
+ 583   5                while(front_dis >=210);
+ 584   5                car_stop();
+ 585   5                delay_ms(20);
+ 586   5                turn_right_90();
+ 587   5                do
+ 588   5                {
+ 589   6                  Circulation_wall_left();
+ 590   6                }
+ 591   5                while(front_dis >=170);//5号火
+ 592   5                car_stop();
+ 593   5                delay_ms(50);
+ 594   5                do
+ 595   5                {
+ 596   6                  Fan_On;
+ 597   6                  delay_ms(blow);//1100
+ 598   6                  break;
+ 599   6                }
+ 600   5                while(LeftFire==0||RightFire==0);
+ 601   5                delay_ms(500);
+ 602   5                //害怕死灰复燃，停2秒，再次检测，
+ 603   5                while(LeftFire==0||RightFire==0)
+ 604   5                {
+ 605   6                  Fan_On;
+ 606   6                  delay_ms(500);//1000
+ 607   6                  break;
+ 608   6                }
+ 609   5                delay_ms(1000);
+ 610   5                //害怕死灰复燃，停0.5秒，再次检测，保证吹灭
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 11  
+
+ 611   5                while(LeftFire==0||RightFire==0)
+ 612   5                {
+ 613   6                  Fan_On;
+ 614   6                  delay_ms(500);//1000 
+ 615   6                  break;
+ 616   6                }
+ 617   5                
+ 618   5                Fan_Off;
+ 619   5                delay_ms(500);
+ 620   5              
+ 621   5                car_stop();
+ 622   5                turn_right_90();
+ 623   5              goto fire4_go_to_fire6_NO2;
+ 624   5              }
+ 625   4            }
+ 626   3            else
+ 627   3            //蜡烛都没有着火，准备返回到4号房间大门口，
+ 628   3            //在门口中央判断是否需要进入4号房间灭火
+ 629   3            {
+ 630   4              delay_ms(50);
+ 631   4              //返回到4号房间大门口，在门口中央判断
+ 632   4              //是否需要进入4号房间灭火
+ 633   4              //此时车况是3#大街尽头，车头朝向6#蜡烛
+ 634   4              turn_right_180();
+ 635   4              goto street_3_end_car_forward_up;
+ 636   4            }
+ 637   3            fire4_go_to_fire6_NO2:
+ 638   3            i = 0;
+ 639   3            do
+ 640   3            {
+ 641   4              Circulation_wall_left();      
+ 642   4            }
+ 643   3            while(i<=150);
+ 644   3            do
+ 645   3            {
+ 646   4              Circulation_wall_left();
+ 647   4              //adjustDirection_1(1700,1300);
+ 648   4              front_dis = Ultrasonic_Get_Front();
+ 649   4            }
+ 650   3            while(front_dis >170);
+ 651   3            car_stop();
+ 652   3            delay_ms(50);
+ 653   3            turn_left_90_low();
+ 654   3            do
+ 655   3            {
+ 656   4              Circulation_wall_right();
+ 657   4            }
+ 658   3            while(front_dis >180);
+ 659   3            car_stop();
+ 660   3            delay_ms(150);
+ 661   3            turn_left_90();
+ 662   3            car_stop();
+ 663   3            //从六号到8号
+ 664   3          street_3_end_car_forward_up:            
+ 665   3            left_300=0x00;
+ 666   3            do
+ 667   3            {
+ 668   4              Circulation_wall_right();
+ 669   4              //
+ 670   4              left_dis= Ultrasonic_Get_Left();  
+ 671   4              //
+ 672   4              if(left_dis<400)
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 12  
+
+ 673   4              {
+ 674   5                left_300++;
+ 675   5              }
+ 676   4              else
+ 677   4              {
+ 678   5                left_300=0x00;
+ 679   5              }
+ 680   4            }
+ 681   3            while(left_dis>300||left_300<=1);//front_dis > 580||left_dis <600
+ 682   3      /////////////           
+ 683   3      //这时小车处于3#大街，发现左墙，准备巡左墙走，并在前墙170毫米处停下
+ 684   3            do
+ 685   3            {
+ 686   4              Circulation_wall_right();
+ 687   4            }
+ 688   3            while(right_dis<=400);
+ 689   3      //      car_stop();
+ 690   3      //      car_stop();
+ 691   3            i = 0;
+ 692   3            do
+ 693   3            {
+ 694   4              Circulation_wall_left();
+ 695   4      //        forward();
+ 696   4            }
+ 697   3            while(i<=55);//35
+ 698   3            if(candle_fire_7==0x01||candle_fire_8==0x01)
+ 699   3            {
+ 700   4              car_stop();
+ 701   4              car_stop();
+ 702   4              delay_ms(50);
+ 703   4              turn_right_90();
+ 704   4              delay_ms(5);
+ 705   4              car_stop();
+ 706   4              car_stop();
+ 707   4              delay_ms(50);
+ 708   4              goto fire_8_fire_7_is_fire_on;
+ 709   4            }
+ 710   3            else
+ 711   3            {
+ 712   4                /////////////           
+ 713   4      //这时小车4号房间大门口，准备进入4#大街
+ 714   4      //////////////
+ 715   4              i = 0;
+ 716   4              do
+ 717   4              {
+ 718   5                Circulation_wall_left();
+ 719   5              }
+ 720   4              while(i<=115);  //115 与车速有关90     
+ 721   4              // now potion is middle of door of room 2,next action isturn right 90 
+ 722   4              car_stop();
+ 723   4              delay_ms(50);
+ 724   4              turn_right_90_small();
+ 725   4              delay_ms(30);
+ 726   4              
+ 727   4              _right_dis = 160;
+ 728   4          /////////////           
+ 729   4          //这时小车4#大街，车头对准出发点，准备巡左墙回家
+ 730   4          ///////////////
+ 731   4              do
+ 732   4              {
+ 733   5                Circulation_wall_right();
+ 734   5              }
+C51 COMPILER V9.60.0.0   MAIN                                                              11/02/2024 08:23:44 PAGE 13  
+
+ 735   4              while(front_dis>600);   
+ 736   4              do
+ 737   4              {
+ 738   5                Circulation_wall_right();
+ 739   5              }
+ 740   4              while(front_dis>550);   
+ 741   4              do
+ 742   4              {
+ 743   5                Circulation_wall_right();
+ 744   5              }
+ 745   4              while(front_dis>395);           
+ 746   4              car_stop(); 
+ 747   4              car_stop();         
+ 748   4              while(1);
+ 749   4            }
+ 750   3          }
+ 751   2        }
+ 752   1      }
+*** WARNING C280 IN LINE 80 OF main.c: 'bbb': unreferenced label
+*** WARNING C294 IN LINE 148 OF main.c: unreachable code
+*** WARNING C294 IN LINE 203 OF main.c: unreachable code
+*** WARNING C294 IN LINE 401 OF main.c: unreachable code
+*** WARNING C294 IN LINE 456 OF main.c: unreachable code
+*** WARNING C294 IN LINE 518 OF main.c: unreachable code
+*** WARNING C294 IN LINE 600 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2008    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      5    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  7 WARNING(S),  0 ERROR(S)
