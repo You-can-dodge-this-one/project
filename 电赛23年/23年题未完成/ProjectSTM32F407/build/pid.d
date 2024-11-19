@@ -1,0 +1,10 @@
+.\build\pid.o: ..\FcSrc\pid.c
+.\build\pid.o: ..\FcSrc\pid.h
+.\build\pid.o: E:\tools\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\build\pid.o: ..\FcSrc\control.h
+.\build\pid.o: ..\FcSrc\get_data.h
+.\build\pid.o: ..\FcSrc\mode.h
+.\build\pid.o: ..\FcSrc\my_uart.h
+.\build\pid.o: ..\FcSrc\mbotLinuxUsart.h
+.\build\pid.o: ..\FcSrc\sys.h
+.\build\pid.o: E:\tools\keil\ARM\ARMCC\Bin\..\include\math.h

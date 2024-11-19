@@ -1,0 +1,133 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.40.0.0
+Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: mink johe, none, LIC=KRMW3-A7AMS-2Z7W4-FS69F-C0LQU-I8N4F
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.40.0.3
+Toolchain Path:  E:\tools\keil\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.40.0.3
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      CMSIS_AGDI.dll V1.33.18.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+C:\Users\30353\Desktop\dainsai\2024year\0_ANO_LX_FC\ProjectSTM32F407\ANO_LX_STM32F407.uvprojx
+Project File Date:  07/26/2024
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\tools\keil\ARM\ARMCC\Bin'
+Build target 'Ano_LX'
+compiling ANO_DT_LX.c...
+..\FcSrc\ANO_DT_LX.c(10): error:  #5: cannot open source input file "main.h": No such file or directory
+  #include "main.h"
+..\FcSrc\ANO_DT_LX.c: 0 warnings, 1 error
+compiling User_Task.c...
+..\FcSrc\User_Task.c(475): error:  #20: identifier "buf1" is undefined
+  		sprintf(buf1,"[s9]前左");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(476): error:  #20: identifier "speak_len1" is undefined
+  		speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(477): warning:  #223-D: function "speak_context" declared implicitly
+  		speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(482): error:  #20: identifier "buf1" is undefined
+  		sprintf(buf1,"[s9]前右");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(483): error:  #20: identifier "speak_len1" is undefined
+  		speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(484): warning:  #223-D: function "speak_context" declared implicitly
+  		speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(489): error:  #20: identifier "buf1" is undefined
+  		sprintf(buf1,"[s9]后左");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(490): error:  #20: identifier "speak_len1" is undefined
+  		speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(491): warning:  #223-D: function "speak_context" declared implicitly
+  		speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(496): error:  #20: identifier "buf1" is undefined
+  		sprintf(buf1,"[s9]后右");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(497): error:  #20: identifier "speak_len1" is undefined
+  		speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(498): warning:  #223-D: function "speak_context" declared implicitly
+  		speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(540): error:  #20: identifier "buf1" is undefined
+  				sprintf(buf1,"[s9]到达第一个区域");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(541): error:  #20: identifier "speak_len1" is undefined
+  				speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(542): warning:  #223-D: function "speak_context" declared implicitly
+  				speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(569): error:  #20: identifier "rx_end_flag" is undefined
+  	if( rx_end_flag==0x01)
+..\FcSrc\User_Task.c(572): error:  #20: identifier "rx_buff" is undefined
+  		int n2 = sscanf((char*)rx_buff,"$KT%c, %lf,%lf, %lf ", &type,  &plant_x_init, &plant_y_init, &plant_z);
+..\FcSrc\User_Task.c(582): error:  #20: identifier "first_frame_end" is undefined
+  		first_frame_end=0;
+..\FcSrc\User_Task.c(588): error:  #20: identifier "rx_end_flag" is undefined
+  	if(rx_end_flag==0x01)
+..\FcSrc\User_Task.c(590): error:  #20: identifier "rx_buff" is undefined
+  		if(rx_buff[1]==0xf0)//ploe
+..\FcSrc\User_Task.c(611): error:  #20: identifier "first_frame_end" is undefined
+  		first_frame_end=0;
+..\FcSrc\User_Task.c(618): error:  #20: identifier "steering_pd12" is undefined
+  	steering_pd12=0;
+..\FcSrc\User_Task.c(621): warning:  #223-D: function "MyDelayUs" declared implicitly
+  	MyDelayUs(50);
+..\FcSrc\User_Task.c(638): error:  #20: identifier "steering_pd13" is undefined
+  	steering_pd13=0;
+..\FcSrc\User_Task.c(641): warning:  #223-D: function "MyDelayUs" declared implicitly
+  	MyDelayUs(50);
+..\FcSrc\User_Task.c(687): error:  #20: identifier "rx_end_flag_com1" is undefined
+  			if(rx_end_flag_com1)
+..\FcSrc\User_Task.c(703): error:  #20: identifier "buf1" is undefined
+  				sprintf(buf1,"[s8]准备已完成，二级已解锁");//飞控解锁
+..\FcSrc\User_Task.c(704): error:  #20: identifier "speak_len1" is undefined
+  				speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(705): warning:  #223-D: function "speak_context" declared implicitly
+  				speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(748): error:  #20: identifier "buf1" is undefined
+  				sprintf(buf1,"[x1] sound201 ");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(749): error:  #20: identifier "speak_len1" is undefined
+  				speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(750): warning:  #223-D: function "speak_context" declared implicitly
+  				speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(774): error:  #20: identifier "buf1" is undefined
+  					sprintf(buf1,"[x1] sound203 ");//\[b1] 欢迎光临，请进
+..\FcSrc\User_Task.c(775): error:  #20: identifier "speak_len1" is undefined
+  					speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c(776): warning:  #223-D: function "speak_context" declared implicitly
+  					speak_context((u8*)buf1,speak_len1);
+..\FcSrc\User_Task.c(781): error:  #20: identifier "find_pole_flag" is undefined
+  					find_pole_flag=0;
+..\FcSrc\User_Task.c(782): error:  #20: identifier "first_frame_end" is undefined
+  					first_frame_end=0;
+..\FcSrc\User_Task.c(783): error:  #20: identifier "second_frame_end" is undefined
+  					second_frame_end=0;
+..\FcSrc\User_Task.c(843): error:  #20: identifier "buf1" is undefined
+  						sprintf(buf1,"[s8]解锁");//飞控解锁
+..\FcSrc\User_Task.c(844): error:  #20: identifier "speak_len1" is undefined
+  						speak_len1=strlen(buf1);
+..\FcSrc\User_Task.c: 10 warnings, 30 errors
+".\build\ANO_LX.axf" - 31 Error(s), 10 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.2.0.pack
+                Keil::STM32F4xx_DFP@2.2.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  E:/tools/keil/Keil/STM32F4xx_DFP/2.2.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+
+<h2>Collection of Component Files used:</h2>
+Target not created.
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

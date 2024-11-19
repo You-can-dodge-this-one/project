@@ -1,0 +1,9 @@
+..\obj\usart.o: ..\SYSTEM\usart\usart.c
+..\obj\usart.o: ..\SYSTEM\usart\usart.h
+..\obj\usart.o: E:\tools\keil\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\usart.o: ..\SYSTEM\sys\sys.h
+..\obj\usart.o: ..\USER\stm32f10x.h
+..\obj\usart.o: E:\tools\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm3.h
+..\obj\usart.o: E:\tools\keil\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\usart.o: E:\tools\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_version.h
+..\obj\usart.o: E:\tools\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_compiler.h
